@@ -4,6 +4,8 @@ import router from './router'
 import focusable from 'vue-tv-focusable'
 Vue.use(focusable);
 
+import '@mdi/font/css/materialdesignicons.min.css'
+
 Vue.config.productionTip = false
 
 // 全局配置，可写可不写，不做配置的情况下就使用vue-tv-focusable默认的配置
