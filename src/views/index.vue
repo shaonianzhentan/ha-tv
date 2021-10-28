@@ -2,6 +2,7 @@
   <div class="views-index">
     <div class="area-list">
       <span class="focus-item" v-focusable>全部</span>
+      <span class="focus-item" v-focusable>未分配</span>
       <span class="focus-item" v-focusable>卧室</span>
       <span class="focus-item" v-focusable>卫生间</span>
       <span class="focus-item" v-focusable>次卧</span>
