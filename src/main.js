@@ -4,6 +4,10 @@ import router from './router'
 import focusable from 'vue-tv-focusable'
 Vue.use(focusable);
 
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
+
 import '@mdi/font/css/materialdesignicons.min.css'
 
 Vue.config.productionTip = false

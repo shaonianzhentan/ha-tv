@@ -1,122 +1,213 @@
 <template>
   <div class="views-index">
     <div class="header">
-      <h1>
-        上午 12:18
+      <h1 class="today">
+        <span>{{ todayTime }}</span>
         <br />
-        周日，十月 31
+        {{ todayDate }}
+        <br />
+        {{ today }}
       </h1>
     </div>
     <div class="area-list">
-      <span class="focus-item" v-focusable>全部</span>
-      <span class="focus-item" v-focusable>未分配</span>
-      <span class="focus-item" v-focusable>卧室</span>
-      <span class="focus-item" v-focusable>卫生间</span>
-      <span class="focus-item" v-focusable>次卧</span>
-      <span class="focus-item" v-focusable>餐厅</span>
-      <span class="focus-item" v-focusable>阳台</span>
+      <span
+        class="focus-item"
+        v-focusable
+        v-for="(area, index) in areaList"
+        :key="index"
+        @onFocus="areaClick(area)"
+        >{{ area.name }}</span
+      >
     </div>
     <div class="device-list">
-      <component
+      <div
         v-focusable
-        :is="'ha-' + entity.domain"
-        class="ha-entity"
         v-for="(entity, index) in entityList"
+        :class="['ha-entity', { active: entity.state == 'on' }, entity.domain]"
         :data="entity"
         :key="index"
-        @click.native="showDialogClick(entity)"
-      ></component>
+        @click="showDialogClick($event, entity)"
+      >
+        <i v-if="entity.domain == 'sensor'">{{ entity.state }}</i>
+        <i v-else :class="['mdi', entity.icon]"></i>
+        <b>{{ entity.friendly_name }}</b>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import {
+  getAuth,
+  createConnection,
+  subscribeEntities,
+  getUser,
+  ERR_HASS_HOST_REQUIRED,
+} from "home-assistant-js-websocket";
+
 export default {
-  components: {
-    "ha-light": () => import("@/components/entitys/ha-light"),
-  },
+  components: {},
   data() {
     return {
-      areaList: [],
-      entityList: [
-        {
-          icon: "mdi-lightbulb-on-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi-toggle-switch-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
-        {
-          icon: "mdi:led-outline",
-          friendly_name: "设备名称",
-          domain: "light",
-        },
+      today: "",
+      todayTime: "",
+      todayDate: "",
+      areaList: [
+        { name: "全部", value: "" },
+        { name: "灯", value: "light" },
+        { name: "开关", value: ["switch", "input_boolean"] },
+        { name: "风扇", value: "fan" },
+        { name: "传感器", value: ["sensor", "binary_sensor"] },
+        { name: "脚本", value: "script" },
+        { name: "自动化", value: "automation" },
       ],
+      list: [],
+      entityList: [],
     };
   },
+  computed: {},
   mounted() {
-      document.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 40 }));
+    this.connect();
+    const week = ["日", "一", "二", "三", "四", "五", "六"];
+    setInterval(() => {
+      const today = new Date();
+      this.todayTime = `${today.toLocaleTimeString()}`;
+      this.todayDate = `${today.getMonth() + 1} 月 ${today.getDate()} 日，周${
+        week[today.getDay()]
+      }`;
+    }, 1000);
+    this.$tv.requestFocus(
+      document.querySelector(".area-list .focus-item"),
+      false
+    );
   },
   methods: {
-    showDialogClick(entity) {
-      console.log(entity);
+    async connect() {
+      let auth = await getAuth({
+        loadTokens() {
+          try {
+            return {
+              access_token:
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiMTcyMjg1OGQxMGU0MWVjOTg2NWQ0NGM0YmY5YWFjMCIsImlhdCI6MTYzNTY3MDE1NCwiZXhwIjoxNjM1NjcxOTU0fQ.Y1vZu5yd_Ty4OvCuSL1kbidNX_ZlXEF3r6epVsc2ET8",
+              token_type: "Bearer",
+              expires_in: 1800,
+              hassUrl: "http://192.168.1.118:8123",
+              clientId: "http://localhost:8080/",
+              expires: 1635671955233,
+              refresh_token:
+                "92aeeac901e2c56e0dd58a99a9b878dc3ccf242a71a6413c74d8d635d6fd7db5e4137abc16a78d8a6d7dd9f235b98a388a6725d6ff284bf5d5991ba7218a09eb",
+            };
+          } catch {}
+        },
+        saveTokens: (data) => {
+          localStorage["hassTokens"] = JSON.stringify(data);
+        },
+      });
+      const connection = await createConnection({ auth });
+      subscribeEntities(connection, (ent) => {
+        this.updateList(ent);
+        // console.log(ent);
+      });
+      this.hass = connection;
+      // 初始化登录信息
+      getUser(connection).then((user) => {
+        console.log("Logged in as", user);
+      });
+    },
+    async callService(serviceName, service_data = {}) {
+      let arr = serviceName.split(".");
+      const result = await this.hass.sendMessagePromise({
+        type: "call_service",
+        domain: arr[0],
+        service: arr[1],
+        service_data,
+      });
+      return result;
+    },
+    updateList(ent) {
+      const list = Object.keys(ent).map((entity_id) => {
+        const { attributes, state } = ent[entity_id];
+        // console.log(ent[entity_id]);
+        const domain = entity_id.split(".")[0];
+        if (!attributes["icon"]) {
+          const icon = {
+            light: {
+              on: "mdi-lightbulb-on-outline",
+              off: "mdi-lightbulb-outline",
+            },
+            switch: {
+              on: "mdi-toggle-switch-outline",
+              off: "mdi-toggle-switch-off-outline",
+            },
+            input_boolean: {
+              on: "mdi-electric-switch",
+              off: "mdi-electric-switch",
+            },
+            fan: {
+              on: "mdi-fan",
+              off: "mdi-fan-off",
+            },
+            script: {
+              on: "mdi-script",
+              off: "mdi-script-outline",
+            },
+            binary_sensor: {
+              on: "mdi-checkbox-blank-circle",
+              off: "mdi-checkbox-blank-circle-outline",
+            },
+            automation: {
+              on: "mdi-robot",
+              off: "mdi-robot-outline",
+            },
+          };
+          let obj = icon[domain];
+          let state_icon = null;
+          if (obj) {
+            state_icon = obj[state];
+          }
+          if (state_icon) {
+            attributes["icon"] = state_icon.replace("mdi:", "mdi-");
+          }
+        } else {
+          attributes["icon"] = attributes["icon"].replace("mdi:", "mdi-");
+        }
+        return {
+          ...attributes,
+          state,
+          entity_id,
+          domain,
+        };
+      });
+      if (this.list.length === 0 && this.entityList.length === 0) {
+        this.entityList = list;
+      } else {
+        // console.log(list);
+        this.entityList.forEach((ele, index) => {
+          const obj = list.find(({ entity_id }) => entity_id == ele.entity_id);
+          if (obj && obj.state !== ele.state) {
+            this.$set(this.entityList, index, obj);
+          }
+        });
+      }
+      this.list = list;
+    },
+    areaClick({ value }) {
+      if (value) {
+        if (Array.isArray(value)) {
+          this.entityList = this.list.filter((ele) =>
+            value.includes(ele.domain)
+          );
+        } else {
+          this.entityList = this.list.filter((ele) => ele.domain == value);
+        }
+      } else {
+        this.entityList = JSON.parse(JSON.stringify(this.list));
+      }
+    },
+    showDialogClick(event, entity) {
+      const state = entity.state == "on" ? "off" : "on";
+      this.callService(`${entity.domain}.turn_${state}`, {
+        entity_id: entity.entity_id,
+      });
     },
   },
 };
@@ -127,6 +218,9 @@ export default {
   color: white;
   .header {
     padding: 0 0 50px 20px;
+    .today {
+      display: inline-block;
+    }
   }
   .area-list {
     padding: 10px;
@@ -151,6 +245,8 @@ export default {
       padding: 10px;
       vertical-align: top;
       text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
       i {
         font-size: 70px;
         display: block;
@@ -159,11 +255,47 @@ export default {
       b {
         font-size: 20px;
       }
+      &.active {
+        i {
+          color: yellow;
+        }
+      }
+      &.sensor {
+        i {
+          font-size: 40px;
+          font-weight: 100;
+          font-style: normal;
+          margin-top: 30px;
+        }
+      }
     }
     .focus {
       transform: scale(1.1);
       border: 2px solid white;
       background-color: #03a9f4;
+    }
+  }
+  .dialog {
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    .ha-dialog {
+      width: 300px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      margin: 0 auto;
+      border-radius: 20px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 50px;
+      .el-switch {
+        transform: scale(2.5);
+      }
     }
   }
 }

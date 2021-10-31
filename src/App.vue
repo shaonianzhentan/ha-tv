@@ -20,4 +20,5 @@
   background-image: url("../public/img/bg1.jpeg");
   background-size: cover;
 }
+
 </style>
