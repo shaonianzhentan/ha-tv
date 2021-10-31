@@ -1,5 +1,12 @@
 <template>
   <div class="views-index">
+    <div class="header">
+      <h1>
+        上午 12:18
+        <br />
+        周日，十月 31
+      </h1>
+    </div>
     <div class="area-list">
       <span class="focus-item" v-focusable>全部</span>
       <span class="focus-item" v-focusable>未分配</span>
@@ -17,6 +24,7 @@
         v-for="(entity, index) in entityList"
         :data="entity"
         :key="index"
+        @click.native="showDialogClick(entity)"
       ></component>
     </div>
   </div>
@@ -31,6 +39,71 @@ export default {
       areaList: [],
       entityList: [
         {
+          icon: "mdi-lightbulb-on-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi-toggle-switch-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
+          icon: "mdi:led-outline",
+          friendly_name: "设备名称",
+          domain: "light",
+        },
+        {
           icon: "mdi:led-outline",
           friendly_name: "设备名称",
           domain: "light",
@@ -38,34 +111,59 @@ export default {
       ],
     };
   },
+  mounted() {
+      document.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 40 }));
+  },
+  methods: {
+    showDialogClick(entity) {
+      console.log(entity);
+    },
+  },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .views-index {
+  padding: 50px;
+  color: white;
+  .header {
+    padding: 0 0 50px 20px;
+  }
   .area-list {
+    padding: 10px;
     .focus-item {
+      padding: 10px;
+      font-size: 30px;
     }
     .focus {
-      color: red;
+      color: #03a9f4;
     }
   }
   .device-list {
     .ha-entity {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 200px;
       margin: 10px;
       display: inline-block;
-      background-color: pink;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
       box-sizing: border-box;
+      border-radius: 10px;
+      padding: 10px;
       vertical-align: top;
+      text-align: center;
       i {
-        font-size: 40px;
+        font-size: 70px;
+        display: block;
+        padding: 10px 0;
+      }
+      b {
+        font-size: 20px;
       }
     }
     .focus {
       transform: scale(1.1);
-      border: 2px solid red;
-      box-shadow: 0 0 20px red;
+      border: 2px solid white;
+      background-color: #03a9f4;
     }
   }
 }
