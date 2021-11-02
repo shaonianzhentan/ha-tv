@@ -82,26 +82,29 @@ export default {
   },
   methods: {
     async connect() {
-      let auth = await getAuth({
-        loadTokens() {
-          try {
-            return {
-              access_token:
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiMTcyMjg1OGQxMGU0MWVjOTg2NWQ0NGM0YmY5YWFjMCIsImlhdCI6MTYzNTY3MDE1NCwiZXhwIjoxNjM1NjcxOTU0fQ.Y1vZu5yd_Ty4OvCuSL1kbidNX_ZlXEF3r6epVsc2ET8",
-              token_type: "Bearer",
-              expires_in: 1800,
-              hassUrl: "http://192.168.1.118:8123",
-              clientId: "http://localhost:8080/",
-              expires: 1635671955233,
-              refresh_token:
-                "92aeeac901e2c56e0dd58a99a9b878dc3ccf242a71a6413c74d8d635d6fd7db5e4137abc16a78d8a6d7dd9f235b98a388a6725d6ff284bf5d5991ba7218a09eb",
-            };
-          } catch {}
-        },
-        saveTokens: (data) => {
-          localStorage["hassTokens"] = JSON.stringify(data);
-        },
-      });
+      let auth;
+      try {
+        // Try to pick up authentication after user logs in
+        auth = await getAuth({
+          loadTokens() {
+            try {
+              return JSON.parse(localStorage["hassTokens"]);
+            } catch {}
+          },
+          saveTokens: (data) => {
+            localStorage["hassTokens"] = JSON.stringify(data);
+          },
+        });
+      } catch (err) {
+        if (err === ERR_HASS_HOST_REQUIRED) {
+          const hassUrl = "http://192.168.1.118";
+          // Redirect user to log in on their instance
+          auth = await getAuth({ hassUrl });
+        } else {
+          alert(`Unknown error: ${err}`);
+          return;
+        }
+      }
       const connection = await createConnection({ auth });
       subscribeEntities(connection, (ent) => {
         this.updateList(ent);
