@@ -10,7 +10,7 @@
     <script>
         try {
             var hassTokens = JSON.parse(localStorage["hassTokens"]);
-            location.href = 'index.html'
+            location.href = 'index.html?r=' + Date.now()
         } catch {
 
         }

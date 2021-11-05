@@ -1,0 +1,12 @@
+{
+    "domain": "ha_tv",
+    "name": "\u6211\u7684\u7535\u89C6",
+    "version": "1.0",
+    "config_flow": false,
+    "documentation": "https://github.com/shaonianzhentan/ha_tv",
+    "requirements": [],
+    "dependencies": [],
+    "codeowners": [
+        "@shaonianzhentan"
+    ]
+}

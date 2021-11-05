@@ -6,7 +6,7 @@
         ><el-button type="primary" @click="setTVClick">设置</el-button>
       </el-form-item>
       <el-form-item label="凭据">
-        ><el-button type="primary" @click="setTokenClick">设置凭据</el-button>
+        <el-button type="primary" @click="setTokenClick">设置凭据</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -39,15 +39,9 @@ export default {
         .then(console.log);
     },
     setTokenClick() {
-      this.post({
-        js: `
-            localStorage["hassTokens"] = ${JSON.stringify(
-              localStorage["hassTokens"]
-            )}
-
-            location.href = 'index.html'
-          `,
-      });
+      const js = `localStorage["hassTokens"]='${localStorage["hassTokens"]}'; location.href = 'index.html'`;
+      console.log(js);
+      this.post({ js });
     },
   },
 };

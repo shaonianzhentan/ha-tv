@@ -1,5 +1,6 @@
 
 module.exports = {
+  publicPath: './',
   outputDir: '../custom_components/ha_tv/local',
   chainWebpack: config => {
     config.plugin('html')
