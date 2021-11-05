@@ -40,7 +40,7 @@ export default {
 </script>
 <style lang="less">
 .ha-media_player {
-  width: 320px !important;
+  width: 300px !important;
   .focus {
     background-color: #03a9f4;
   }

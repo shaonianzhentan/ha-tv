@@ -8,9 +8,9 @@
     <div class="weather">
       <ha-icon
         name="mdi-weather-cloudy"
-        style="font-size: 100px; margin-top: -30px; position: absolute"
+        style="font-size: 90px; margin-top: -30px; position: absolute"
       />
-      <div style="margin-left: 140px; font-size: 30px">
+      <div style="margin-left: 130px; font-size: 23px">
         温度：{{ data.temperature }} ℃
         <br />
         湿度：{{ data.humidity }} %
@@ -48,7 +48,7 @@ export default {
     display: inline-block;
   }
   .weather {
-    width: 400px;
+    display: inline-block;
     float: right;
   }
 }

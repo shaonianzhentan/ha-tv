@@ -25,12 +25,12 @@ export default {
   methods: {
     setTVClick() {
       const url = encodeURIComponent(`${location.origin}/ha-tv/ha.html`);
-      fetch(`http://${this.form.host}?url=${url}`)
+      fetch(`http://${this.form.host}:8124?url=${url}`)
         .then((res) => res.json())
         .then(console.log);
     },
     post(body) {
-      fetch(`http://${this.form.host}`, {
+      fetch(`http://${this.form.host}:8124`, {
         method: "POST",
         body: JSON.stringify(body),
         headers: { "Content-Type": "application/json; charset=utf-8" },
