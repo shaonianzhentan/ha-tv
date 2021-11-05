@@ -127,5 +127,6 @@ class Hass {
 export default {
     install: function (Vue) {
         Vue.hass = Vue.prototype.hass = new Hass()
+        Vue.hass.connect(location.origin)
     }
 }

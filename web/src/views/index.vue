@@ -14,7 +14,7 @@
     <div class="device-list">
       <component
         class="ha-entity"
-        v-for="(entity, index) in entityList"
+        v-for="(entity, index) in list"
         :is="componentName(entity.domain)"
         :data="entity"
         :key="index"
@@ -46,7 +46,6 @@ export default {
         { name: "自动化", value: "automation" },
       ],
       list: [],
-      entityList: [],
     };
   },
   mounted() {
@@ -66,9 +65,9 @@ export default {
       const { entities } = this.hass;
       if (value) {
         let arr = Array.isArray(value) ? value : [value];
-        this.entityList = entities.filter((ele) => arr.includes(ele.domain));
+        this.list = entities.filter((ele) => arr.includes(ele.domain));
       } else {
-        this.entityList = entities;
+        this.list = entities;
       }
     },
   },
