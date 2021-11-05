@@ -23,8 +23,8 @@ export default {
 </script>
 <style lang="less">
 .ha-camera {
-  width: 450px !important;
-  height: 300px !important;
+  width: 100vh !important;
+  height: 80vh !important;
   b {
     margin-bottom: 10px;
     display: block;

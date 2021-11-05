@@ -7,7 +7,7 @@
         v-focusable
         v-for="(area, index) in areaList"
         :key="index"
-        @onFocus="areaClick(area)"
+        @onFocus="areaClick(index)"
         >{{ area.name }}</span
       >
     </div>
@@ -18,6 +18,8 @@
         :is="componentName(entity.domain)"
         :data="entity"
         :key="index"
+        @left.native="leftKey"
+        @right.native="rightKey"
       ></component>
     </div>
   </div>
@@ -48,6 +50,7 @@ export default {
         { name: "播放器", value: "media_player" },
         { name: "摄像机", value: "camera" },
       ],
+      focus: null,
       list: [],
     };
   },
@@ -56,9 +59,9 @@ export default {
       document.querySelector(".area-list .focus-item"),
       false
     );
-    this.areaClick({ value: "" });
+    this.areaClick(0);
     this.hass.on("update", () => {
-      this.areaClick({ value: this.area });
+      this.areaClick(this.area);
     });
   },
   methods: {
@@ -71,8 +74,18 @@ export default {
       if (["camera"].includes(domain)) return "ha-camera";
       return "ha-default";
     },
-    areaClick({ value }) {
-      this.area = value;
+    leftKey(event) {
+      // if (this.focus === event.target) {
+      //   if (this.area > 0) {
+      //     this.areaClick(this.area - 1);
+      //   }
+      // }
+      this.focus = event.target;
+    },
+    rightKey(event) {},
+    areaClick(index) {
+      this.area = index;
+      const { value } = this.areaList[index];
       const { entities } = this.hass;
       if (value) {
         let arr = Array.isArray(value) ? value : [value];

@@ -1,5 +1,6 @@
 <template>
   <div class="ha-media_player">
+    <h4 style="padding: 10px 0 10px 0">{{ data.friendly_name }}</h4>
     <el-row :gutter="20">
       <el-col :span="8">
         <ha-icon
@@ -23,8 +24,7 @@
         />
       </el-col>
     </el-row>
-    <h4>{{ data.friendly_name }}</h4>
-    <h2>{{ data.media_title }}</h2>
+    <h3>{{ data.media_title }}</h3>
   </div>
 </template>
 <script>
@@ -40,7 +40,10 @@ export default {
 </script>
 <style lang="less">
 .ha-media_player {
-  width: 300px !important;
+  width: 250px !important;
+  i {
+    font-size: 40px !important;
+  }
   .focus {
     background-color: #03a9f4;
   }

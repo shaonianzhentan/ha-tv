@@ -6,13 +6,16 @@
 </head>
 
 <body>
-    <h1>测试一下</h1>
+    <a href="index.html">
+        <h1>测试一下
+        </h1>
+    </a>
     <script>
         try {
             var hassTokens = JSON.parse(localStorage["hassTokens"]);
             location.href = 'index.html?r=' + Math.random()
-        } catch {
-
+        } catch (ex) {
+            alert("出现异常")
         }
     </script>
 </body>
