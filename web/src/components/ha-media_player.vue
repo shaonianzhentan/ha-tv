@@ -23,6 +23,7 @@
         />
       </el-col>
     </el-row>
+    <h4>{{ data.friendly_name }}</h4>
     <h2>{{ data.media_title }}</h2>
   </div>
 </template>
@@ -40,5 +41,8 @@ export default {
 <style lang="less">
 .ha-media_player {
   width: 320px !important;
+  .focus {
+    background-color: #03a9f4;
+  }
 }
 </style>

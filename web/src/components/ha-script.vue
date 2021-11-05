@@ -1,8 +1,8 @@
 <template>
   <div
-    :class="['ha-switch', { 'state-on': data.state == 'on' }]"
+    :class="['ha-script', { 'state-on': data.state == 'on' }]"
     v-focusable
-    @click="hass.toggle(data)"
+    @click="hass.trigger(data)"
   >
     <ha-icon :name="data.icon" />
     <b>{{ data.friendly_name }}</b>
@@ -16,10 +16,7 @@ export default {
   data() {
     return {};
   },
-  methods: {},
 };
 </script>
 <style lang="less">
-.ha-switch {
-}
 </style>

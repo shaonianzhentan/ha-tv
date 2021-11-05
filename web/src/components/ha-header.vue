@@ -5,10 +5,24 @@
       <br />
       {{ todayDate }}
     </h1>
+    <div class="weather">
+      <ha-icon
+        name="mdi-weather-cloudy"
+        style="font-size: 100px; margin-top: -30px; position: absolute"
+      />
+      <div style="margin-left: 140px; font-size: 30px">
+        温度：{{ data.temperature }} ℃
+        <br />
+        湿度：{{ data.humidity }} %
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
+  props: {
+    data: {},
+  },
   data() {
     return {
       todayTime: "",
@@ -32,6 +46,10 @@ export default {
   padding: 0 0 50px 20px;
   .today {
     display: inline-block;
+  }
+  .weather {
+    width: 400px;
+    float: right;
   }
 }
 </style>

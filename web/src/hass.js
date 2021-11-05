@@ -4,11 +4,14 @@ class Hass {
 
     constructor() {
         this.hass = null
-        this.entities = [
-            {
-                domain: 'media_player'
-            }
-        ]
+        this.entities = []
+        this.events = {
+            'update': []
+        }
+    }
+
+    on(name, callback) {
+        this.events[name].push(callback)
     }
 
     async connect(hassUrl) {
@@ -34,6 +37,7 @@ class Hass {
         }
         const connection = await createConnection({ auth });
         this.hass = connection;
+        this.hassUrl = connection.options.auth.data.hassUrl
         // 初始化登录信息
         getUser(connection).then((user) => {
             console.log("Logged in as", user);
@@ -93,6 +97,8 @@ class Hass {
                     domain,
                 };
             });
+            // 更新事件
+            this.events['update'].forEach(callback => callback())
         });
     }
 
@@ -109,6 +115,14 @@ class Hass {
 
     toggle({ domain, entity_id, state }) {
         this.callService(`${domain}.turn_${state == "on" ? "off" : "on"}`, { entity_id });
+    }
+
+    trigger({ domain, entity_id }) {
+        if (domain === 'automation') {
+            this.callService("automation.trigger", { entity_id });
+        } else if (domain === 'script') {
+            this.callService(entity_id, {});
+        }
     }
 
     media_play_pause({ entity_id }) {

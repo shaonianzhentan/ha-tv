@@ -77,6 +77,9 @@ namespace TVApp
                                         }
                                     }
                                 }
+                                else if (request.HttpMethod == "OPTIONS") {
+                                    response.AppendHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,Accept,Origin,User-Agent,DNT,Cache-Control,X-Mx-ReqToken,X-Requested-With");
+                                }
                                 else
                                 {
                                     if (!string.IsNullOrEmpty(query["url"]))
@@ -94,6 +97,9 @@ namespace TVApp
                             byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
                             //对客户端输出相应信息.
                             response.ContentType = "application/json; charset=utf-8";
+                            response.AppendHeader("Access-Control-Allow-Origin", "*");
+                            response.AppendHeader("Access-Control-Allow-Credentials", "true");
+                            response.AppendHeader("Access-Control-Allow-Method", "GET,POST,OPTIONS,PUT,DELETE");
                             response.ContentLength64 = buffer.Length;
                             System.IO.Stream output = response.OutputStream;
                             output.Write(buffer, 0, buffer.Length);
