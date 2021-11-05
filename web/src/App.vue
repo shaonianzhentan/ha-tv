@@ -7,7 +7,15 @@
     </div>
   </div>
 </template>
-
+<script>
+export default {
+  data() {
+    return {};
+  },
+  created() {},
+  methods: {},
+};
+</script>
 <style lang="less">
 * {
   margin: 0;
@@ -20,5 +28,4 @@
   background-image: url("../public/img/bg1.jpeg");
   background-size: cover;
 }
-
 </style>

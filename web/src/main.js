@@ -8,6 +8,11 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 
+import hass from './hass'
+Vue.use(hass)
+
+Vue.component("ha-icon", () => import("./components/ha-icon"))
+
 import '@mdi/font/css/materialdesignicons.min.css'
 
 Vue.config.productionTip = false
@@ -30,6 +35,7 @@ vm.$tv.init({
   // offsetDistance:100,
   // longPressTime:3000,
 });
+
 new Vue({
   router,
   render: h => h(App)
