@@ -7,7 +7,8 @@
         v-focusable
         v-for="(area, index) in areaList"
         :key="index"
-        @onFocus="areaClick(index)"
+        @on-focus="areaClick(index)"
+        @on-blur="recoredArea(index)"
         >{{ area.name }}</span
       >
     </div>
@@ -18,8 +19,8 @@
         :is="componentName(entity.domain)"
         :data="entity"
         :key="index"
-        @left.native="leftKey"
-        @right.native="rightKey"
+        @blur="recoredEntity"
+        @on-blur.native="recoredEntity"
       ></component>
     </div>
   </div>
@@ -50,7 +51,8 @@ export default {
         { name: "播放器", value: "media_player" },
         { name: "摄像机", value: "camera" },
       ],
-      focus: null,
+      blurIndex: null,
+      blurEntity: false,
       list: [],
     };
   },
@@ -61,7 +63,7 @@ export default {
     );
     this.areaClick(0);
     this.hass.on("update", () => {
-      this.areaClick(this.area);
+      this.update(this.area);
     });
   },
   methods: {
@@ -74,16 +76,30 @@ export default {
       if (["camera"].includes(domain)) return "ha-camera";
       return "ha-default";
     },
-    leftKey(event) {
-      // if (this.focus === event.target) {
-      //   if (this.area > 0) {
-      //     this.areaClick(this.area - 1);
-      //   }
-      // }
-      this.focus = event.target;
+    recoredArea(index) {
+      this.blurIndex = index;
+      this.blurEntity = false;
     },
-    rightKey(event) {},
+    recoredEntity() {
+      this.blurEntity = true;
+    },
     areaClick(index) {
+      const { blurEntity, blurIndex } = this;
+      // console.log(blurEntity, blurIndex)
+      if (blurEntity) {
+        index = blurIndex;
+        this.blurIndex = null;
+        this.blurEntity = false;
+        this.$tv.requestFocus(
+          document.querySelector(
+            `.area-list .focus-item:nth-child(${blurIndex + 1})`
+          ),
+          false
+        );
+      }
+      this.update(index);
+    },
+    update(index) {
       this.area = index;
       const { value } = this.areaList[index];
       const { entities } = this.hass;

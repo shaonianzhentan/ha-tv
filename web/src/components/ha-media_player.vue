@@ -6,21 +6,24 @@
         <ha-icon
           name="mdi-skip-previous-outline"
           v-focusable
-          @click="hass.media_previous_track(data)"
+          @on-blur.native="$emit('blur')"
+          @click.native="hass.media_previous_track(data)"
         />
       </el-col>
       <el-col :span="8">
         <ha-icon
           name="mdi-play-pause"
           v-focusable
-          @click="hass.media_play_pause(data)"
+          @on-blur.native="$emit('blur')"
+          @click.native="hass.media_play_pause(data)"
         />
       </el-col>
       <el-col :span="8">
         <ha-icon
           name="mdi-skip-next-outline"
           v-focusable
-          @click="hass.media_next_track(data)"
+          @on-blur.native="$emit('blur')"
+          @click.native="hass.media_next_track(data)"
         />
       </el-col>
     </el-row>
