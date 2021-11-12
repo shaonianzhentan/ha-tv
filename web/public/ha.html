@@ -3,19 +3,57 @@
 
 <head>
     <meta charset="utf-8" />
+    <style>
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background-image: url("img/bg1.jpeg");
+            background-size: cover;
+        }
+
+        .focus {
+            transform: scale(1.1);
+            border: 2px solid white;
+            box-shadow: 0 0 20px white;
+        }
+
+        .demo {
+            text-align: center;
+            padding-top: 150px;
+        }
+
+        .item {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            margin: 10px;
+            text-align: center;
+            line-height: 150px;
+            font-size: 30px;
+            background-color: rgb(0, 0, 0, .5);
+            color: white;
+            box-sizing: border-box;
+            vertical-align: top;
+        }
+    </style>
+    <script
+        src="https://cdn.jsdelivr.net/gh/slailcp/tv-focusable-example@master/js-focusable-example/js/tv-focusable.js"></script>
 </head>
 
 <body>
-    <a href="index.html">
-        <h1>测试一下
-        </h1>
-    </a>
+    <div class="demo">
+        <a class="item" focusable onclick="tolink('index.html')">
+            Home
+        </a>
+        <div class="item" focusable>
+            视频
+        </div>
+        <div class="item" focusable>3</div>
+        <div class="item" focusable>no focus</div>
+    </div>
     <script>
-        try {
-            var hassTokens = JSON.parse(localStorage["hassTokens"]);
-            location.href = 'index.html?r=' + Math.random()
-        } catch (ex) {
-            alert("出现异常")
+        function tolink(url) {
+            location.href = url + '?r=' + Math.random()
         }
     </script>
 </body>
